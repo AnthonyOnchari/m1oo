@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat App</title>
     <style>
         * {
@@ -10,15 +10,12 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: #121212;
             height: 100vh;
             overflow: hidden;
         }
-
-        /* Login Screen */
         .login-screen {
             position: fixed;
             top: 0;
@@ -31,26 +28,22 @@
             align-items: center;
             z-index: 1000;
         }
-
         .login-card {
             background: #1e1e1e;
             border-radius: 32px;
             padding: 40px;
             width: 400px;
         }
-
         .login-card h1 {
             color: #25D366;
             font-size: 32px;
             margin-bottom: 8px;
         }
-
         .login-card .subtitle {
             color: #888;
             font-size: 14px;
             margin-bottom: 32px;
         }
-
         .login-card input {
             width: 100%;
             padding: 14px;
@@ -62,11 +55,9 @@
             color: white;
             outline: none;
         }
-
         .login-card input:focus {
             border-color: #25D366;
         }
-
         .login-card button {
             width: 100%;
             padding: 14px;
@@ -79,7 +70,6 @@
             font-weight: 600;
             cursor: pointer;
         }
-
         .toggle-mode {
             text-align: center;
             color: #25D366;
@@ -87,21 +77,17 @@
             font-size: 14px;
             margin-top: 16px;
         }
-
         .error-msg {
             color: #ff4444;
             font-size: 13px;
             text-align: center;
             margin-top: 12px;
         }
-
-        /* Chat App */
         .chat-app {
             display: none;
             width: 100%;
             height: 100vh;
         }
-
         .sidebar {
             width: 30%;
             background: #111111;
@@ -111,19 +97,16 @@
             display: flex;
             flex-direction: column;
         }
-
         .sidebar-header {
             padding: 20px;
             background: #0d0d0d;
             border-bottom: 1px solid #222;
         }
-
         .profile {
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-
         .avatar {
             width: 40px;
             height: 40px;
@@ -136,22 +119,18 @@
             font-size: 18px;
             color: white;
         }
-
         .profile-info {
             flex: 1;
             margin-left: 12px;
         }
-
         .profile-name {
             color: white;
             font-weight: 600;
         }
-
         .profile-status {
             color: #25D366;
             font-size: 12px;
         }
-
         .logout-btn {
             background: none;
             border: none;
@@ -160,12 +139,10 @@
             cursor: pointer;
             padding: 8px;
         }
-
         .chat-list {
             flex: 1;
             overflow-y: auto;
         }
-
         .chat-item {
             padding: 12px 16px;
             display: flex;
@@ -173,15 +150,12 @@
             cursor: pointer;
             border-bottom: 1px solid #1a1a1a;
         }
-
         .chat-item:hover {
             background: #1a1a1a;
         }
-
         .chat-item.active {
             background: #1e2a1e;
         }
-
         .chat-avatar {
             width: 50px;
             height: 50px;
@@ -194,23 +168,19 @@
             font-weight: bold;
             color: white;
         }
-
         .chat-details {
             flex: 1;
             margin-left: 12px;
         }
-
         .chat-name {
             color: white;
             font-weight: 500;
         }
-
         .chat-preview {
             color: #888;
             font-size: 13px;
             margin-top: 4px;
         }
-
         .chat-area {
             width: 70%;
             height: 100vh;
@@ -219,7 +189,6 @@
             flex-direction: column;
             background: #0f0f0f;
         }
-
         .chat-header {
             padding: 16px 20px;
             background: #0d0d0d;
@@ -227,7 +196,6 @@
             display: flex;
             align-items: center;
         }
-
         .chat-header-avatar {
             width: 40px;
             height: 40px;
@@ -240,17 +208,14 @@
             font-weight: bold;
             color: white;
         }
-
         .chat-header-info {
             flex: 1;
             margin-left: 12px;
         }
-
         .chat-header-name {
             color: white;
             font-weight: 600;
         }
-
         .messages {
             flex: 1;
             overflow-y: auto;
@@ -258,45 +223,37 @@
             display: flex;
             flex-direction: column;
         }
-
         .message {
             margin-bottom: 12px;
             display: flex;
         }
-
         .message.me {
             justify-content: flex-end;
         }
-
         .bubble {
             max-width: 65%;
             padding: 10px 14px;
             border-radius: 18px;
         }
-
         .message:not(.me) .bubble {
             background: #1e1e1e;
             color: #e0e0e0;
             border-bottom-left-radius: 4px;
         }
-
         .message.me .bubble {
             background: #25D366;
             color: white;
             border-bottom-right-radius: 4px;
         }
-
         .message-text {
             font-size: 14px;
         }
-
         .message-time {
             font-size: 10px;
             margin-top: 4px;
             opacity: 0.7;
             text-align: right;
         }
-
         .input-area {
             padding: 16px 20px;
             background: #0d0d0d;
@@ -304,7 +261,6 @@
             display: flex;
             gap: 12px;
         }
-
         .input-area input {
             flex: 1;
             padding: 12px 16px;
@@ -315,11 +271,9 @@
             color: white;
             outline: none;
         }
-
         .input-area input:focus {
             border-color: #25D366;
         }
-
         .input-area button {
             background: #25D366;
             color: white;
@@ -329,13 +283,11 @@
             font-weight: 600;
             cursor: pointer;
         }
-
         .empty-state {
             text-align: center;
             color: #666;
             padding: 40px;
         }
-
         .clearfix::after {
             content: "";
             clear: both;
@@ -344,7 +296,6 @@
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
     <div id="loginScreen" class="login-screen">
         <div class="login-card">
             <h1>Chat App</h1>
@@ -358,7 +309,6 @@
         </div>
     </div>
 
-    <!-- Chat App -->
     <div id="chatApp" class="chat-app clearfix">
         <div class="sidebar">
             <div class="sidebar-header">
@@ -395,8 +345,7 @@
     </div>
 
     <script>
-        // ============ CONFIGURATION ============
-        // REPLACE THIS WITH YOUR APPS SCRIPT WEB APP URL
+        // IMPORTANT: REPLACE THIS URL WITH YOUR ACTUAL APPS SCRIPT WEB APP URL
         const API_URL = 'https://script.google.com/macros/s/AKfycbwQ6I1oiwll-zXvQbCuFewZqFnd8PQJNsRIyNVfjp8jFcXPKOBDvHO0xMfIjDQ0Epd1/exec';
         
         let currentUser = null;
@@ -408,31 +357,17 @@
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
+                    mode: 'cors',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ action, ...data })
                 });
-                
-                // Since mode is 'no-cors', we need a different approach
-                // Let's use JSONP style or fetch with proper CORS
                 return await response.json();
             } catch (error) {
                 console.error('API Error:', error);
                 return { error: error.message };
             }
-        }
-
-        // Better approach - use Google Script's built-in CORS support
-        function callGAS(action, data, callback) {
-            google.script.run
-                .withSuccessHandler(callback)
-                .withFailureHandler((error) => {
-                    console.error('Error:', error);
-                    callback({ error: error.message });
-                })
-                [action](data);
         }
 
         function toggleMode() {
@@ -456,7 +391,7 @@
             document.getElementById('errorMsg').textContent = '';
         }
 
-        function handleAuth() {
+        async function handleAuth() {
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('errorMsg');
@@ -473,38 +408,32 @@
                     return;
                 }
                 
-                google.script.run
-                    .withSuccessHandler(function(result) {
-                        if (result.success) {
-                            errorDiv.style.color = '#25D366';
-                            errorDiv.textContent = result.message;
-                            setTimeout(() => {
-                                toggleMode();
-                                document.getElementById('username').value = '';
-                                document.getElementById('password').value = '';
-                                document.getElementById('fullName').value = '';
-                                errorDiv.textContent = '';
-                            }, 2000);
-                        } else {
-                            errorDiv.textContent = result.error;
-                        }
-                    })
-                    .registerUser(username, password, fullName);
+                const result = await callAPI('register', { username, password, fullName });
+                if (result.success) {
+                    errorDiv.style.color = '#25D366';
+                    errorDiv.textContent = result.message;
+                    setTimeout(() => {
+                        toggleMode();
+                        document.getElementById('username').value = '';
+                        document.getElementById('password').value = '';
+                        document.getElementById('fullName').value = '';
+                        errorDiv.textContent = '';
+                    }, 2000);
+                } else {
+                    errorDiv.textContent = result.error;
+                }
             } else {
                 errorDiv.textContent = 'Logging in...';
                 errorDiv.style.color = '#25D366';
                 
-                google.script.run
-                    .withSuccessHandler(function(result) {
-                        if (result.success) {
-                            currentUser = result;
-                            startChat();
-                        } else {
-                            errorDiv.style.color = '#ff4444';
-                            errorDiv.textContent = result.error;
-                        }
-                    })
-                    .loginUser(username, password);
+                const result = await callAPI('login', { username, password });
+                if (result.success) {
+                    currentUser = result;
+                    startChat();
+                } else {
+                    errorDiv.style.color = '#ff4444';
+                    errorDiv.textContent = result.error;
+                }
             }
         }
 
@@ -526,34 +455,32 @@
             }, 2000);
         }
 
-        function loadUsers() {
-            google.script.run
-                .withSuccessHandler(function(result) {
-                    const container = document.getElementById('chatList');
-                    
-                    if (result.users.length === 0) {
-                        container.innerHTML = '<div class="empty-state">👥 No other users found<br><br>💡 Register another account to chat!</div>';
-                        return;
-                    }
-                    
-                    container.innerHTML = '';
-                    result.users.forEach(user => {
-                        const initial = user.fullName.charAt(0).toUpperCase();
-                        const div = document.createElement('div');
-                        div.className = 'chat-item';
-                        if (currentChat === user.username) div.classList.add('active');
-                        div.innerHTML = `
-                            <div class="chat-avatar">${escapeHtml(initial)}</div>
-                            <div class="chat-details">
-                                <div class="chat-name">${escapeHtml(user.fullName)}</div>
-                                <div class="chat-preview" id="preview_${user.username}">Tap to chat</div>
-                            </div>
-                        `;
-                        div.onclick = () => selectUser(user.username, user.fullName);
-                        container.appendChild(div);
-                    });
-                })
-                .getUsers(currentUser.username);
+        async function loadUsers() {
+            const result = await callAPI('getUsers', { currentUser: currentUser.username });
+            
+            const container = document.getElementById('chatList');
+            
+            if (!result.users || result.users.length === 0) {
+                container.innerHTML = '<div class="empty-state">👥 No other users found<br><br>💡 Register another account to chat!</div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            result.users.forEach(user => {
+                const initial = user.fullName.charAt(0).toUpperCase();
+                const div = document.createElement('div');
+                div.className = 'chat-item';
+                if (currentChat === user.username) div.classList.add('active');
+                div.innerHTML = `
+                    <div class="chat-avatar">${escapeHtml(initial)}</div>
+                    <div class="chat-details">
+                        <div class="chat-name">${escapeHtml(user.fullName)}</div>
+                        <div class="chat-preview" id="preview_${user.username}">Tap to chat</div>
+                    </div>
+                `;
+                div.onclick = () => selectUser(user.username, user.fullName);
+                container.appendChild(div);
+            });
         }
 
         function selectUser(username, fullName) {
@@ -580,56 +507,57 @@
             loadMessages();
         }
 
-        function loadMessages() {
+        async function loadMessages() {
             if (!currentChat) return;
             
-            google.script.run
-                .withSuccessHandler(function(result) {
-                    const container = document.getElementById('messages');
-                    
-                    if (result.messages.length === 0) {
-                        container.innerHTML = '<div class="empty-state">✨ No messages yet<br>Send a message to start the conversation!</div>';
-                        return;
-                    }
-                    
-                    container.innerHTML = '';
-                    result.messages.forEach(msg => {
-                        const div = document.createElement('div');
-                        div.className = `message ${msg.isMe ? 'me' : ''}`;
-                        
-                        let timeStr = '';
-                        if (msg.time) {
-                            try {
-                                const d = new Date(msg.time);
-                                timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                            } catch(e) {}
-                        }
-                        
-                        div.innerHTML = `
-                            <div class="bubble">
-                                <div class="message-text">${escapeHtml(msg.text)}</div>
-                                ${timeStr ? `<div class="message-time">${timeStr}</div>` : ''}
-                            </div>
-                        `;
-                        container.appendChild(div);
-                    });
-                    container.scrollTop = container.scrollHeight;
-                    
-                    // Update preview
-                    if (result.messages.length > 0) {
-                        const lastMsg = result.messages[result.messages.length - 1];
-                        const preview = document.getElementById(`preview_${currentChat}`);
-                        if (preview) {
-                            const prefix = lastMsg.isMe ? 'You: ' : '';
-                            const shortMsg = lastMsg.text.length > 30 ? lastMsg.text.substring(0, 30) + '...' : lastMsg.text;
-                            preview.textContent = prefix + shortMsg;
-                        }
-                    }
-                })
-                .getMessages(currentUser.username, currentChat);
+            const result = await callAPI('getMessages', { 
+                currentUser: currentUser.username, 
+                withUser: currentChat 
+            });
+            
+            const container = document.getElementById('messages');
+            
+            if (!result.messages || result.messages.length === 0) {
+                container.innerHTML = '<div class="empty-state">✨ No messages yet<br>Send a message to start the conversation!</div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            result.messages.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = `message ${msg.isMe ? 'me' : ''}`;
+                
+                let timeStr = '';
+                if (msg.time) {
+                    try {
+                        const d = new Date(msg.time);
+                        timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    } catch(e) {}
+                }
+                
+                div.innerHTML = `
+                    <div class="bubble">
+                        <div class="message-text">${escapeHtml(msg.text)}</div>
+                        ${timeStr ? `<div class="message-time">${timeStr}</div>` : ''}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            container.scrollTop = container.scrollHeight;
+            
+            // Update preview
+            if (result.messages.length > 0) {
+                const lastMsg = result.messages[result.messages.length - 1];
+                const preview = document.getElementById(`preview_${currentChat}`);
+                if (preview) {
+                    const prefix = lastMsg.isMe ? 'You: ' : '';
+                    const shortMsg = lastMsg.text.length > 30 ? lastMsg.text.substring(0, 30) + '...' : lastMsg.text;
+                    preview.textContent = prefix + shortMsg;
+                }
+            }
         }
 
-        function sendMessage() {
+        async function sendMessage() {
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
             
@@ -646,19 +574,21 @@
             sendBtn.disabled = true;
             sendBtn.textContent = 'Sending...';
             
-            google.script.run
-                .withSuccessHandler(function(result) {
-                    if (result.success) {
-                        input.value = '';
-                        input.focus();
-                        loadMessages();
-                    } else {
-                        alert('Failed to send');
-                    }
-                    sendBtn.disabled = false;
-                    sendBtn.textContent = 'Send';
-                })
-                .sendMessage(currentUser.username, currentChat, message);
+            const result = await callAPI('sendMessage', { 
+                fromUser: currentUser.username, 
+                toUser: currentChat, 
+                message: message 
+            });
+            
+            if (result.success) {
+                input.value = '';
+                input.focus();
+                loadMessages();
+            } else {
+                alert('Failed to send');
+            }
+            sendBtn.disabled = false;
+            sendBtn.textContent = 'Send';
         }
 
         function logout() {
