@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App</title>
+    <title>Chat App - Google Sheets Database</title>
     <style>
         * {
             margin: 0;
@@ -345,8 +345,8 @@
     </div>
 
     <script>
-        // IMPORTANT: REPLACE THIS URL WITH YOUR ACTUAL APPS SCRIPT WEB APP URL
-        const API_URL = 'https://script.google.com/macros/s/AKfycbwQ6I1oiwll-zXvQbCuFewZqFnd8PQJNsRIyNVfjp8jFcXPKOBDvHO0xMfIjDQ0Epd1/exec';
+        // YOUR DEPLOYED APPS SCRIPT URL
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxxhGejMfRrZ4hwq7rS8uOt8YDpJ134HFZdR7mNOIDKK9yKfLegP2QjLTHDxQrHsxm_Iw/exec';
         
         let currentUser = null;
         let currentChat = null;
@@ -363,10 +363,15 @@
                     },
                     body: JSON.stringify({ action, ...data })
                 });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
                 return await response.json();
             } catch (error) {
                 console.error('API Error:', error);
-                return { error: error.message };
+                return { error: `Connection error: ${error.message}` };
             }
         }
 
@@ -408,9 +413,11 @@
                     return;
                 }
                 
+                errorDiv.style.color = '#25D366';
+                errorDiv.textContent = 'Creating account...';
+                
                 const result = await callAPI('register', { username, password, fullName });
                 if (result.success) {
-                    errorDiv.style.color = '#25D366';
                     errorDiv.textContent = result.message;
                     setTimeout(() => {
                         toggleMode();
@@ -420,11 +427,12 @@
                         errorDiv.textContent = '';
                     }, 2000);
                 } else {
+                    errorDiv.style.color = '#ff4444';
                     errorDiv.textContent = result.error;
                 }
             } else {
-                errorDiv.textContent = 'Logging in...';
                 errorDiv.style.color = '#25D366';
+                errorDiv.textContent = 'Logging in...';
                 
                 const result = await callAPI('login', { username, password });
                 if (result.success) {
@@ -446,17 +454,24 @@
             document.getElementById('userName').textContent = currentUser.fullName;
             
             loadUsers();
+            loadChats();
             
             if (refreshTimer) clearInterval(refreshTimer);
             refreshTimer = setInterval(() => {
                 if (currentChat) {
                     loadMessages();
                 }
-            }, 2000);
+                loadChats(); // Refresh chat list for new messages
+            }, 3000);
         }
 
         async function loadUsers() {
             const result = await callAPI('getUsers', { currentUser: currentUser.username });
+            
+            if (result.error) {
+                console.error('Load users error:', result.error);
+                return;
+            }
             
             const container = document.getElementById('chatList');
             
@@ -465,20 +480,81 @@
                 return;
             }
             
+            // Store users data for later use
+            window.usersList = result.users;
+            displayChatList();
+        }
+        
+        async function loadChats() {
+            const result = await callAPI('getChats', { currentUser: currentUser.username });
+            
+            if (result.error) {
+                console.error('Load chats error:', result.error);
+                return;
+            }
+            
+            window.chatsList = result.chats || [];
+            displayChatList();
+        }
+        
+        function displayChatList() {
+            const container = document.getElementById('chatList');
+            
+            // Combine users and chats, prioritizing chats with recent messages
+            const chatMap = new Map();
+            
+            // Add existing chats
+            if (window.chatsList) {
+                window.chatsList.forEach(chat => {
+                    chatMap.set(chat.user.username, {
+                        ...chat.user,
+                        lastMessage: chat.lastMessage,
+                        lastUpdated: chat.lastUpdated
+                    });
+                });
+            }
+            
+            // Add users without chats
+            if (window.usersList) {
+                window.usersList.forEach(user => {
+                    if (!chatMap.has(user.username)) {
+                        chatMap.set(user.username, {
+                            ...user,
+                            lastMessage: null,
+                            lastUpdated: null
+                        });
+                    }
+                });
+            }
+            
+            // Convert to array and sort
+            const allChats = Array.from(chatMap.values());
+            allChats.sort((a, b) => {
+                if (!a.lastUpdated && !b.lastUpdated) return 0;
+                if (!a.lastUpdated) return 1;
+                if (!b.lastUpdated) return -1;
+                return new Date(b.lastUpdated) - new Date(a.lastUpdated);
+            });
+            
+            if (allChats.length === 0) {
+                container.innerHTML = '<div class="empty-state">👥 No other users found</div>';
+                return;
+            }
+            
             container.innerHTML = '';
-            result.users.forEach(user => {
-                const initial = user.fullName.charAt(0).toUpperCase();
+            allChats.forEach(user => {
+                const initial = (user.fullName || user.username).charAt(0).toUpperCase();
                 const div = document.createElement('div');
                 div.className = 'chat-item';
                 if (currentChat === user.username) div.classList.add('active');
                 div.innerHTML = `
                     <div class="chat-avatar">${escapeHtml(initial)}</div>
                     <div class="chat-details">
-                        <div class="chat-name">${escapeHtml(user.fullName)}</div>
-                        <div class="chat-preview" id="preview_${user.username}">Tap to chat</div>
+                        <div class="chat-name">${escapeHtml(user.fullName || user.username)}</div>
+                        <div class="chat-preview">${user.lastMessage ? escapeHtml(user.lastMessage.substring(0, 40)) : 'Tap to start chatting'}</div>
                     </div>
                 `;
-                div.onclick = () => selectUser(user.username, user.fullName);
+                div.onclick = () => selectUser(user.username, user.fullName || user.username);
                 container.appendChild(div);
             });
         }
@@ -486,18 +562,7 @@
         function selectUser(username, fullName) {
             currentChat = username;
             
-            document.querySelectorAll('.chat-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            const items = document.querySelectorAll('.chat-item');
-            for (let item of items) {
-                const nameSpan = item.querySelector('.chat-name');
-                if (nameSpan && nameSpan.textContent === fullName) {
-                    item.classList.add('active');
-                    break;
-                }
-            }
+            displayChatList(); // Refresh active state
             
             document.getElementById('chatHeader').style.display = 'flex';
             document.getElementById('inputArea').style.display = 'flex';
@@ -505,6 +570,9 @@
             document.getElementById('chatName').textContent = fullName;
             
             loadMessages();
+            
+            // Mark messages as read
+            callAPI('markRead', { fromUser: currentChat, currentUser: currentUser.username });
         }
 
         async function loadMessages() {
@@ -516,6 +584,11 @@
             });
             
             const container = document.getElementById('messages');
+            
+            if (result.error) {
+                container.innerHTML = `<div class="empty-state">⚠️ Error loading messages: ${result.error}</div>`;
+                return;
+            }
             
             if (!result.messages || result.messages.length === 0) {
                 container.innerHTML = '<div class="empty-state">✨ No messages yet<br>Send a message to start the conversation!</div>';
@@ -544,17 +617,6 @@
                 container.appendChild(div);
             });
             container.scrollTop = container.scrollHeight;
-            
-            // Update preview
-            if (result.messages.length > 0) {
-                const lastMsg = result.messages[result.messages.length - 1];
-                const preview = document.getElementById(`preview_${currentChat}`);
-                if (preview) {
-                    const prefix = lastMsg.isMe ? 'You: ' : '';
-                    const shortMsg = lastMsg.text.length > 30 ? lastMsg.text.substring(0, 30) + '...' : lastMsg.text;
-                    preview.textContent = prefix + shortMsg;
-                }
-            }
         }
 
         async function sendMessage() {
@@ -584,8 +646,9 @@
                 input.value = '';
                 input.focus();
                 loadMessages();
+                loadChats(); // Refresh chat list
             } else {
-                alert('Failed to send');
+                alert('Failed to send: ' + (result.error || 'Unknown error'));
             }
             sendBtn.disabled = false;
             sendBtn.textContent = 'Send';
